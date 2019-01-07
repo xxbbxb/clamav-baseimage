@@ -1,0 +1,32 @@
+{
+    "variables": {
+      "version": ""
+    },
+    "provisioners": [
+      {
+        "type": "shell",
+        "script": "scripts/clamav-setup.sh"
+      },
+      {
+        "type": "shell",
+        "script": "scripts/clamav-databases.sh"
+      }
+    ],
+    "builders": [
+      {
+        "type": "docker",
+        "image": "phusion/baseimage:latest",
+        "commit": true,
+        "changes": [
+          "CMD /sbin/my_init --skip-runit --skip-startup-files setuser clamav bash"
+        ]
+      }
+    ],
+    "post-processors": [
+      {
+        "type": "docker-tag",
+        "repository": "clamav-baseimage",
+        "tag": "latest"
+      }
+    ]
+}
